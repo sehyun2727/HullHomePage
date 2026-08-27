@@ -1,0 +1,1784 @@
+/*
+Theme Name: Lightning Child
+Theme URI: https://lightning.vektor-inc.co.jp/en/
+Template: lightning
+Author: Vektor,Inc.
+Author URI: https://www.vektor-inc.co.jp
+Description: Lightning is a very simple &amp; easy to customize theme which is based on the Bootstrap. It is also very friendly with custom post types and custom taxonomies. When you add a new one, the breadcrumbs will be adjusted and posts will look beautifully without editing or adding a template files.
+Tags: blog,one-column,custom-background,custom-colors,custom-logo,custom-menu,editor-style,featured-images,footer-widgets,full-width-template,sticky-post,theme-options,threaded-comments,translation-ready,block-styles,wide-blocks
+Version: 15.37.1.1783666257
+Updated: 2026-07-10 15:50:57
+
+*/
+
+/* ============================================================
+   HULL Column — Single Article Styles
+
+   Design tokens extracted from hull-inc.jp (see CSS custom
+   properties below). Do not introduce new approximate colors —
+   reuse these.
+   ============================================================ */
+:root {
+	--column-green: #49a339;      /* HULL --vk-color-primary: site chrome (headings accent, links, tags, pagination) */
+	--column-green-dark: #419314; /* HULL --vk-color-primary-dark: hover/active state for the above */
+	--column-cta-green: #66a033;  /* HULL VK Blocks CTA button background (matches real "お問い合わせはこちらから" button) */
+	--column-charcoal: #585757;   /* HULL body/heading text color */
+	--column-bg-soft: #eef2e6;    /* HULL light section background */
+	--column-gray: #666;          /* muted meta text (date, etc.) */
+}
+
+/* ---------- 共通タグ（テキスト＋ドット方式） ---------- */
+.column-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	background: none;
+	color: var(--column-charcoal);
+	font-size: 12px;
+	line-height: 1.4;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+.column-tag::before,
+.column-tag-float__link::before {
+	content: '';
+	flex: 0 0 auto;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: currentColor;
+}
+.column-tag:hover {
+	color: var(--column-green-dark);
+	text-decoration: underline;
+}
+.column-tag--small {
+	font-size: 11px;
+	padding: 0;
+}
+
+/* ---------- Single article header ---------- */
+.column-single__header {
+	margin-bottom: 32px;
+}
+.column-single__title {
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1.4;
+	letter-spacing: 0.02em;
+	color: var(--column-charcoal);
+	margin-bottom: 16px;
+}
+.column-single__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	font-size: 12px;
+	letter-spacing: 0.02em;
+	color: var(--column-gray);
+	margin-bottom: 12px;
+}
+.column-single__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-bottom: 16px;
+}
+.column-single__thumbnail {
+	margin-top: 16px;
+	width: 100%;
+	max-width: 760px;
+}
+.column-single__thumbnail-img {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	display: block;
+	border-radius: 4px;
+}
+
+/* ---------- リード文 ---------- */
+.column-single__lead {
+	background: var(--column-bg-soft);
+	border-left: 4px solid var(--column-cta-green);
+	padding: 16px 20px;
+	margin-bottom: 32px;
+	font-size: 15px;
+	line-height: 1.8;
+	color: var(--column-charcoal);
+	border-radius: 0 4px 4px 0;
+}
+
+/* ---------- 本文 ---------- */
+.column-single__body {
+	margin-bottom: 40px;
+	font-size: 15px;
+	line-height: 1.9;
+	letter-spacing: 0.02em;
+}
+/* Reset: parent theme applies a gray box (background + top/bottom
+   border + box-shadow) to every h2/h3 sitewide. Clear it here so
+   only our own accent border shows — otherwise it doubles up with
+   the parent's default box. */
+.column-single__body h2,
+.column-faq__heading,
+.column-summary__heading,
+.column-related__heading,
+.column-archive__sidebar-heading {
+	background: none;
+	border-top: none;
+	border-right: none;
+	border-bottom: none;
+	box-shadow: none;
+}
+.column-single__body h3 {
+	background: none;
+	box-shadow: none;
+}
+.column-single__body h3::after {
+	content: none;
+}
+.column-single__body h2 {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding: 0 0 0 12px;
+	margin-top: 48px;
+	margin-bottom: 20px;
+}
+.column-single__body h3 {
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	color: var(--column-charcoal);
+	border-bottom: 2px solid #e0e0e0;
+	padding: 0 0 8px;
+	margin-top: 36px;
+	margin-bottom: 14px;
+}
+
+/* ---------- FAQ アコーディオン ---------- */
+.column-faq {
+	margin-bottom: 40px;
+}
+.column-faq__heading {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding: 0 0 0 12px;
+	margin-bottom: 24px;
+}
+.column-faq__list {
+	margin: 0;
+	padding: 0;
+}
+.column-faq__item {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+.column-faq__question {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 14px 16px;
+	background: #f9f9f9;
+	cursor: pointer;
+	margin: 0;
+	user-select: none;
+	transition: background 0.25s ease;
+}
+.column-faq__question:hover,
+.column-faq__question[aria-expanded="true"] {
+	background: var(--column-bg-soft);
+}
+.faq-icon {
+	flex-shrink: 0;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 1;
+}
+.faq-icon--q {
+	background: var(--column-green);
+	color: #fff;
+}
+.faq-icon--a {
+	background: var(--column-charcoal);
+	color: #fff;
+}
+.faq-question-text {
+	flex: 1;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.6;
+	padding-top: 4px;
+}
+.faq-toggle-icon {
+	flex-shrink: 0;
+	width: 20px;
+	height: 20px;
+	position: relative;
+	margin-top: 4px;
+}
+.faq-toggle-icon::before,
+.faq-toggle-icon::after {
+	content: '';
+	position: absolute;
+	background: #555;
+	border-radius: 2px;
+	transition: transform 0.25s, opacity 0.25s;
+}
+.faq-toggle-icon::before {
+	width: 14px;
+	height: 2px;
+	top: 9px;
+	left: 3px;
+}
+.faq-toggle-icon::after {
+	width: 2px;
+	height: 14px;
+	top: 3px;
+	left: 9px;
+}
+.column-faq__question[aria-expanded="true"] .faq-toggle-icon::after {
+	transform: rotate(90deg);
+	opacity: 0;
+}
+.column-faq__answer {
+	display: flex;
+	gap: 12px;
+	padding: 14px 16px;
+	background: #fff;
+	border-top: 1px solid #eee;
+}
+.column-faq__answer[hidden] {
+	display: none;
+}
+.faq-answer-text {
+	flex: 1;
+	font-size: 14px;
+	line-height: 1.8;
+	color: var(--column-charcoal);
+	padding-top: 4px;
+}
+
+/* ---------- まとめ ---------- */
+.column-summary {
+	background: var(--column-bg-soft);
+	border: 1px solid var(--column-cta-green);
+	border-radius: 6px;
+	padding: 24px 28px;
+	margin-bottom: 40px;
+}
+.column-summary__heading {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	margin-bottom: 16px;
+	color: var(--column-charcoal);
+	border: none;
+	padding: 0;
+}
+.column-summary__body {
+	font-size: 14px;
+	line-height: 1.9;
+	color: var(--column-charcoal);
+}
+
+/* ---------- CTA ---------- */
+.column-cta {
+	background: var(--column-bg-soft);
+	color: var(--column-charcoal);
+	text-align: center;
+	padding: 36px 24px;
+	border-radius: 6px;
+	margin-bottom: 48px;
+}
+.column-cta__text {
+	font-size: 16px;
+	margin-bottom: 24px;
+	line-height: 1.8;
+}
+.column-cta__buttons {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+.column-cta__btn {
+	display: inline-block;
+	padding: 14px 36px;
+	border-radius: 4px;
+	font-size: 15px;
+	font-weight: 700;
+	text-decoration: none;
+	transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.column-cta__btn::after {
+	content: '→';
+	margin-left: 8px;
+}
+.column-cta__btn:hover {
+	text-decoration: none;
+	transform: scale(1.02);
+}
+.column-cta__btn--contact {
+	background: var(--column-cta-green);
+	color: #fff;
+	border: 2px solid var(--column-cta-green);
+}
+.column-cta__btn--contact:hover {
+	background: var(--column-green-dark);
+	border-color: var(--column-green-dark);
+}
+.column-cta__btn--single {
+	padding: 14px 32px;
+}
+
+/* ---------- 関連コラム ---------- */
+.column-related {
+	margin-bottom: 48px;
+}
+.column-related__heading {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding: 0 0 0 12px;
+	margin-bottom: 24px;
+}
+.column-related__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 40px 28px;
+}
+.column-card {
+	/* No border/shadow box at rest — cards are separated by grid whitespace only;
+	   hover adds a temporary lift + shadow as interactive feedback only. */
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.column-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+.column-card__link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+.column-card__link:hover {
+	/* Parent theme's global `a:hover{text-decoration:underline}` outranks the
+	   base `.column-card__link{text-decoration:none}` above by specificity
+	   (element+pseudo-class beats a single class) — pin it back down here. */
+	text-decoration: none;
+}
+.column-card__thumb {
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	border-radius: 4px;
+	background: #f0f0f0;
+}
+.column-card__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.3s;
+}
+.column-card:hover .column-card__img {
+	transform: scale(1.04);
+}
+.column-card__no-image {
+	width: 100%;
+	height: 100%;
+	background: #dce4ed;
+}
+.column-card__body {
+	padding: 20px 18px 10px;
+}
+.column-card__date {
+	font-size: 11px;
+	font-weight: 400;
+	letter-spacing: 0.03em;
+	color: #999;
+	display: block;
+	margin-bottom: 10px;
+}
+.column-card__title {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.6;
+	margin-bottom: 8px;
+	color: var(--column-charcoal);
+	background: none;
+	border-bottom: none;
+	box-shadow: none;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/* Hard cap at 2 lines so a partial 3rd line can't peek below the ellipsis
+	   when the browser's line-clamp height rounding leaves a sliver visible. */
+	max-height: calc(1.6em * 2);
+	transition: color 0.25s ease;
+}
+.column-card__title::after {
+	content: none;
+}
+.column-card__link:hover .column-card__title {
+	color: var(--column-green);
+}
+.column-card__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 0 18px 10px;
+}
+
+/* ---------- コラム一覧へ戻る ---------- */
+.column-back {
+	text-align: center;
+	margin-bottom: 48px;
+}
+.column-back__link {
+	display: inline-block;
+	padding: 12px 32px;
+	border: 2px solid var(--column-green);
+	border-radius: 4px;
+	color: var(--column-green);
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s;
+}
+.column-back__link:hover {
+	background: var(--column-green-dark);
+	color: #fff;
+	text-decoration: none;
+}
+
+/* ============================================================
+   HULL Column — Archive List Styles
+   ============================================================ */
+
+/* ---------- タイトルエリア：他ページ共通レイアウトに統一 ----------
+   Same pattern as the other site pages (デジタルサイネージ, 会社概要 etc.):
+   left = white panel with title + 2-line description, right = photo
+   bleeding to the viewport edge, blended into the white panel via a
+   gradient. Those pages bake the fade into the source JPEG itself;
+   here the same photo (column-archive-hero.jpg) is reused as-is, so
+   the fade is done with a CSS gradient overlay instead. height:31vw matches
+   the .mainvisual hero rule (Customizer Additional CSS) verbatim so this hero
+   scales with viewport width exactly the same way; min-height:430px is the
+   same floor .mainvisual gets for free from core's default cover min-height. */
+.column-hero {
+	position: relative;
+	min-height: 430px;
+	height: 31vw;
+	display: flex;
+	align-items: center;
+	background: #fff;
+	overflow: hidden;
+}
+/* Gutenberg wraps every Group block's children in an extra
+   .wp-block-group__inner-container div (the PHP-templated /column/
+   page has no such wrapper). Each one is a lone flex child of a
+   display:flex ancestor (.column-hero itself, and further down
+   .row) with no explicit width, so it shrinks to fit its content
+   instead of stretching - dragging .container/.column-hero__text
+   far off to the right. Force every level to fill the flex line. */
+.column-hero .wp-block-group__inner-container {
+	width: 100%;
+}
+.column-hero__image {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 40%;
+	background-image: url('images/column-archive-hero.jpg');
+	background-size: cover;
+	background-position: center;
+}
+.column-hero__image::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to right, #fff 0%, rgba(255,255,255,0) 35%);
+}
+.column-hero .container {
+	position: relative;
+	z-index: 1;
+}
+.column-hero__text {
+	max-width: 480px;
+	padding: 40px 0;
+}
+.column-hero__title {
+	margin: 0 0 16px;
+	color: #595757;
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 1.3;
+}
+.column-hero__desc {
+	margin: 0;
+	color: #595757;
+	font-size: 15px;
+	line-height: 1.9;
+}
+@media (max-width: 767px) {
+	.column-hero__text {
+		max-width: none;
+		padding: 28px 0;
+	}
+	/* Same vw-scaled formula the Customizer Additional CSS uses for
+	   .mainvisual h1/p (see .mainvisual/.mvSlide rules), so the title
+	   shrinks with viewport width exactly like the Sign-page hero does,
+	   instead of staying at the fixed desktop 40px/15px on phones. */
+	.column-hero__title {
+		font-size: calc(113 / 1920 * 0.5 * 0.85 * 100vw);
+		margin-bottom: calc(60 / 1920 * 0.5 * 100vw);
+	}
+	.column-hero__desc {
+		font-size: calc(44 / 1920 * 0.5 * 100vw);
+	}
+}
+/* Parent theme's .siteContent padding-top (1.5/2.5/3/3.5em across its own
+   breakpoints) leaves too much space between the hero photo and the
+   search bar below — halve it at each matching breakpoint. */
+.post-type-archive-column .siteContent,
+.tax-column_category .siteContent,
+.tax-column_tag .siteContent {
+	padding-top: 12px;
+}
+@media (min-width: 768px) {
+	.post-type-archive-column .siteContent,
+	.tax-column_category .siteContent,
+	.tax-column_tag .siteContent {
+		padding-top: 20px;
+	}
+}
+@media (min-width: 992px) {
+	.post-type-archive-column .siteContent,
+	.tax-column_category .siteContent,
+	.tax-column_tag .siteContent {
+		padding-top: 24px;
+	}
+}
+@media (min-width: 1200px) {
+	.post-type-archive-column .siteContent,
+	.tax-column_category .siteContent,
+	.tax-column_tag .siteContent {
+		padding-top: 28px;
+	}
+}
+/* ---------- ニュース(お知らせ)カテゴリーアーカイブ：コラム(/column/)と同じ
+   写真＋白グラデーションのヒーローに差し替え。既存のニュース一覧・サイドバー
+   等はそのまま、最上部のバナー部分のみ対象。画像はTOPページで既に使われて
+   いる news_bg.jpg を再利用（ルート相対パスなのでドメイン移行後もそのまま
+   動作する） ---------- */
+.news-hero {
+	position: relative;
+	min-height: 430px;
+	height: 31vw;
+	display: flex;
+	align-items: center;
+	background: #fff;
+	overflow: hidden;
+}
+.news-hero__image {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 40%;
+	background-image: url('/wp-content/uploads/2024/03/news_bg.jpg');
+	background-size: cover;
+	background-position: center;
+	/* ソースの写真自体が暗めなので、明るく鮮やかに補正。
+	   グラデーション（下の .news-hero__gradient）は別レイヤーなので
+	   このfilterの影響を受けず、コラムと同じ位置・幅のまま保たれる */
+	filter: brightness(1.9) saturate(1.25) contrast(1.03);
+}
+.news-hero__gradient {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 40%;
+	background: linear-gradient(to right, #fff 0%, rgba(255,255,255,0) 35%);
+}
+.news-hero .container {
+	position: relative;
+	z-index: 1;
+}
+.news-hero__text {
+	max-width: 480px;
+	padding: 40px 0;
+}
+.news-hero__title {
+	margin: 0 0 16px;
+	color: #595757;
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 1.3;
+}
+.news-hero__desc {
+	margin: 0;
+	color: #595757;
+	font-size: 15px;
+	line-height: 1.9;
+}
+@media (max-width: 767px) {
+	.news-hero__text {
+		max-width: none;
+		padding: 28px 0;
+	}
+	/* Same vw-scaled formula as .column-hero__title/__desc above, matching
+	   the Sign-page hero's mobile text sizing (Customizer .mainvisual h1/p). */
+	.news-hero__title {
+		font-size: calc(113 / 1920 * 0.5 * 0.85 * 100vw);
+		margin-bottom: calc(60 / 1920 * 0.5 * 100vw);
+	}
+	.news-hero__desc {
+		font-size: calc(44 / 1920 * 0.5 * 100vw);
+	}
+}
+/* TOP page slider (VK Blocks Slider, className="mvSlide") is configured
+   height:31vw at every breakpoint ("unit":"vw","pc":31,"tablet":31,"mobile":31),
+   same as .mainvisual — but unlike .mainvisual (a core Cover block, which gets
+   min-height:430px for free from WP core's block-library CSS), VK Blocks Slider
+   has no built-in floor, so on narrow phones it collapses to a sliver. Give it
+   the same 430px floor .mainvisual already has, so it matches on mobile too. */
+.mvSlide {
+	min-height: 430px;
+}
+/* パンくずと最初の記事の間が広すぎるので、コラムアーカイブと同じ考え方で
+   .siteContent の上パディングを半分に縮小（各ブレークポイント値もコラム側
+   と揃えている） */
+.category-news .siteContent {
+	padding-top: 12px;
+}
+@media (min-width: 768px) {
+	.category-news .siteContent {
+		padding-top: 20px;
+	}
+}
+@media (min-width: 992px) {
+	.category-news .siteContent {
+		padding-top: 24px;
+	}
+}
+@media (min-width: 1200px) {
+	.category-news .siteContent {
+		padding-top: 28px;
+	}
+}
+/* ---------- 検索バー（タイトル + 検索ボックス） ---------- */
+.column-search-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin: 8px 0 24px;
+}
+.column-search-bar__title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--column-charcoal);
+	white-space: nowrap;
+}
+.column-search__form {
+	position: relative;
+	width: 100%;
+	max-width: 440px;
+}
+.column-search__input {
+	width: 100%;
+	padding: 10px 40px 10px 16px;
+	border: 1px solid rgba(73, 163, 57, 0.35);
+	border-radius: 4px;
+	font-size: 14px;
+	color: var(--column-charcoal);
+	background: #fff;
+	transition: border-color 0.2s ease;
+}
+.column-search__input::placeholder {
+	color: #b7b7b7;
+}
+.column-search__input:focus {
+	outline: none;
+	border-color: var(--column-green);
+}
+.column-search__btn {
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--column-green);
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+.column-search__btn:hover {
+	color: var(--column-green-dark);
+}
+.column-search__noresults {
+	margin-top: 24px;
+	padding: 20px;
+	background: var(--column-bg-soft);
+	color: var(--column-charcoal);
+	border-radius: 4px;
+	text-align: center;
+}
+/* Pre-rendered posts outside the current pagination slice — kept in the DOM
+   so column-search.js can match against them, hidden until a search matches. */
+.column-card--extra {
+	display: none;
+}
+/* column-search.js toggles these instead of inline style.display, since an
+   inline style can only be cleared (falling back to the rule above) not
+   overridden by removal — a class of equal specificity is needed to win. */
+.column-card--extra.is-search-match {
+	display: block;
+}
+.column-card.is-search-hidden {
+	display: none;
+}
+
+/* ---------- カテゴリ絞り込みタブ（/column/ と各 column_category アーカイブ） ---------- */
+/* Single-row underline tabs: no box/background, active tab marked by an
+   underline + accent color (no matching component found elsewhere on the
+   site to reuse, so this is a new brand-color-only style). */
+.column-category-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 28px;
+	margin: 0 0 32px;
+	border-bottom: 1px solid #ddd;
+}
+.column-category-tabs__item {
+	display: inline-block;
+	padding: 8px 2px 10px;
+	margin-bottom: -1px;
+	border-bottom: 2px solid transparent;
+	color: var(--column-charcoal);
+	background: none;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.5;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: color 0.2s, border-color 0.2s;
+}
+.column-category-tabs__item:hover {
+	color: var(--column-green);
+	text-decoration: none;
+}
+.column-category-tabs__item.is-active {
+	color: var(--column-green);
+	border-bottom-color: var(--column-green);
+}
+
+.column-archive__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 56px 40px;
+	margin-top: 32px;
+	margin-bottom: 40px;
+}
+/* Column count steps down in explicit stages instead of jumping
+   straight from 3 columns to 1 — see breakpoint table below. */
+.card-grid { grid-template-columns: repeat(3, 1fr); }
+.card-grid .column-card__body {
+	padding: 24px 18px 12px;
+}
+.card-grid .column-card__tags {
+	padding: 0 18px 12px;
+}
+
+/* >=1200px: 3 columns — matches unscoped rule above, kept explicit for clarity */
+@media (min-width: 1200px) {
+	.card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+/* 768px–1199px: 2 columns (merges the old 992–1199 / 768–991 tiers into one band) */
+@media (min-width: 768px) and (max-width: 1199px) {
+	.card-grid { grid-template-columns: repeat(2, 1fr); }
+	.column-archive__grid { gap: 40px 28px; }
+	.card-grid .column-card__body { padding: 20px 18px 10px; }
+	.card-grid .column-card__tags { padding: 0 18px 10px; }
+}
+.column-archive__cta {
+	margin-top: 40px;
+}
+/* No sideSection column remains in the row on these two templates —
+   parent theme's .mainSection-col-two otherwise keeps a fixed 66.67% width. */
+.post-type-archive-column .mainSection-col-two,
+.tax-column_category .mainSection-col-two {
+	width: 100%;
+}
+/* Still used by taxonomy-column_tag.php's own always-on sidebar (unrelated to $show_tags). */
+.column-archive__sidebar-heading {
+	font-size: 16px;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding: 0 0 0 10px;
+	margin-bottom: 16px;
+}
+.column-archive__tag-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.column-archive__tag-list li {
+	margin-bottom: 8px;
+}
+.column-archive__tag-link {
+	display: block;
+	padding: 10px 14px;
+	background: var(--column-bg-soft);
+	border: 1px solid var(--column-green);
+	border-radius: 4px;
+	color: var(--column-green);
+	font-size: 14px;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s;
+}
+.column-archive__tag-link:hover {
+	background: var(--column-green-dark);
+	color: #fff;
+	text-decoration: none;
+}
+.column-archive__tag-link.is-active {
+	background: var(--column-green);
+	color: #fff;
+	font-weight: 700;
+}
+/* ---------- 右フローティング タグ縦サイドバー（開閉式） ---------- */
+/* Visible from page load (position:fixed, vertically centered) — the
+   collapsed handle is narrow enough that it never covers the card grid,
+   so there's no need to gate its appearance behind a scroll threshold. */
+.column-tag-float-anchor {
+	height: 0;
+}
+.column-tag-float {
+	position: fixed;
+	top: 50%;
+	right: 0;
+	z-index: 60;
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: flex-start;
+	transform: translateY(-50%);
+}
+.column-tag-float__handle {
+	flex: 0 0 auto;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+	background: var(--column-green-dark);
+	border: 1px solid var(--column-green-dark);
+	border-right: none;
+	border-radius: 6px 0 0 6px;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.15em;
+	padding: 16px 6px;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+}
+.column-tag-float__handle:hover,
+.column-tag-float.is-open .column-tag-float__handle {
+	background: var(--column-green);
+	color: #fff;
+}
+/* Collapsed: max-width 0 + overflow hidden keeps the panel's footprint at
+   zero width so it never covers the card grid; sliding it open just grows
+   the width back out (with a matching opacity/transform fade). The inner
+   wrapper keeps a fixed width regardless of the outer clip, so collapsing
+   the panel doesn't force its text to reflow/wrap into a tall single column. */
+.column-tag-float__panel {
+	flex: 0 0 auto;
+	max-width: 0;
+	margin-right: 0;
+	overflow: hidden;
+	opacity: 0;
+	background: var(--column-green-dark);
+	border: 1px solid var(--column-green-dark);
+	border-radius: 6px;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+	transform: translateX(12px);
+	pointer-events: none;
+	transition: max-width 0.28s ease, opacity 0.22s ease, transform 0.28s ease,
+		margin-right 0.28s ease;
+}
+.column-tag-float.is-open .column-tag-float__panel {
+	max-width: 190px;
+	opacity: 1;
+	transform: translateX(0);
+	margin-right: 8px;
+	pointer-events: auto;
+}
+.column-tag-float__panel-inner {
+	width: 190px;
+	padding: 14px;
+}
+.column-tag-float__panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+.column-tag-float__heading {
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	white-space: nowrap;
+}
+.column-tag-float__close {
+	background: none;
+	border: none;
+	color: #fff;
+	font-size: 18px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 0 0 8px;
+}
+.column-tag-float__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.column-tag-float__link {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.3;
+	text-decoration: none;
+	text-align: left;
+	transition: opacity 0.2s;
+}
+.column-tag-float__link:hover {
+	opacity: 0.8;
+	text-decoration: underline;
+}
+.column-archive__current-tag {
+	font-size: 22px;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding-left: 12px;
+	margin-bottom: 24px;
+}
+
+/* ---------- パンくず hover（Column ページのみ） ---------- */
+.post-type-archive-column .breadcrumb a,
+.single-column .breadcrumb a {
+	transition: color 0.25s ease;
+}
+.post-type-archive-column .breadcrumb a:hover,
+.single-column .breadcrumb a:hover {
+	color: var(--column-green);
+	text-decoration: underline;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 767px) {
+	.column-category-tabs {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 4px;
+	}
+	.column-category-tabs__item {
+		flex: 0 0 auto;
+	}
+	.column-search-bar {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+	.column-search__form {
+		max-width: 100%;
+	}
+	.column-single__title {
+		font-size: 24px;
+	}
+	.column-related__grid {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+	.column-cta__buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+	.column-cta__btn {
+		width: 100%;
+		max-width: 280px;
+		text-align: center;
+	}
+	.column-cta__btn--single {
+		max-width: 340px;
+		padding: 14px 20px;
+		font-size: 14px;
+	}
+	.column-archive__grid,
+	.card-grid {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+	.column-archive__grid {
+		margin-top: 32px;
+	}
+	.column-archive__current-tag {
+		font-size: 18px;
+	}
+	.column-archive__sidebar {
+		margin-top: 32px;
+	}
+	.column-tag-float {
+		display: none;
+	}
+}
+
+@media (max-width: 400px) {
+	.column-cta__btn--single {
+		padding: 12px 14px;
+		font-size: 12.5px;
+	}
+}
+
+/* グローバルナビ：「コラム」項目のみ左右余白を拡大 */
+.device-pc .gMenu > li#menu-item-6786 > a {
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+/* グローバルナビ：上位5項目(HULL VISION/HULL SPACE/Topics/Company/Contact)の左右余白を1.5倍に拡大 */
+.device-pc .gMenu > li > a {
+	padding-left: 24px;
+	padding-right: 24px;
+}
+
+/* グローバルナビ全体を右に8px移動（今回さらに8px追加＝合計16px） */
+.device-pc #gMenu_outer {
+	margin-right: -16px;
+}
+
+/* HULLロゴを左に8px移動 */
+.device-pc .siteHeader_logo {
+	margin-left: -8px;
+}
+
+/* Contactのみ：HULLメイングリーンのボタン化 */
+.device-pc .gMenu > li#menu-item-3171 > a {
+	background: var(--column-cta-green);
+	border-radius: 4px;
+}
+.device-pc .gMenu > li#menu-item-3171 > a .gMenu_name,
+.device-pc .gMenu > li#menu-item-3171 > a .gMenu_description {
+	color: #fff;
+}
+.device-pc .gMenu > li#menu-item-3171 > a:hover {
+	background: var(--column-green-dark);
+}
+
+/* ===== [WORKS-CPT] START ===== */
+
+/* ============================================================
+   HULL Works (事例) CPT — Archive / Taxonomy / Single Styles
+   Mirrored from column CSS above. Selector prefix: .works-*
+   ============================================================ */
+
+/* ---------- 共通タグ ---------- */
+.works-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	background: none;
+	color: var(--column-charcoal);
+	font-size: 12px;
+	line-height: 1.4;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+.works-tag::before,
+.works-tag-float__link::before {
+	content: '';
+	flex: 0 0 auto;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: currentColor;
+}
+.works-tag:hover {
+	color: var(--column-green-dark);
+	text-decoration: underline;
+}
+.works-tag--small {
+	font-size: 11px;
+	padding: 0;
+}
+
+/* ---------- Single article header / meta / thumbnail / body ----------
+   Mirrors .column-single__* (see top of file) so /works/ single posts get
+   the same constrained 760px thumbnail and article typography as /column/,
+   instead of the parent theme's full-width .icatchCont fallback. */
+.works-single__header {
+	margin-bottom: 32px;
+}
+.works-single__title {
+	font-size: 32px;
+	font-weight: 700;
+	line-height: 1.4;
+	letter-spacing: 0.02em;
+	color: var(--column-charcoal);
+	margin-bottom: 16px;
+}
+.works-single__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	font-size: 12px;
+	letter-spacing: 0.02em;
+	color: var(--column-gray);
+	margin-bottom: 12px;
+}
+.works-single__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-bottom: 16px;
+}
+.works-single__thumbnail {
+	margin-top: 16px;
+	width: 100%;
+	max-width: 760px;
+}
+.works-single__thumbnail-img {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	display: block;
+	border-radius: 4px;
+}
+.works-single__body {
+	margin-bottom: 40px;
+	font-size: 15px;
+	line-height: 1.9;
+	letter-spacing: 0.02em;
+}
+.works-single__body h2,
+.works-single__body h3 {
+	background: none;
+	border-top: none;
+	border-right: none;
+	border-bottom: none;
+	box-shadow: none;
+}
+.works-single__body h3::after {
+	content: none;
+}
+.works-single__body h2 {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding: 0 0 0 12px;
+	margin-top: 48px;
+	margin-bottom: 20px;
+}
+.works-single__body h3 {
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	color: var(--column-charcoal);
+	border-bottom: 2px solid #e0e0e0;
+	padding: 0 0 8px;
+	margin-top: 36px;
+	margin-bottom: 14px;
+}
+
+/* ---------- 事例一覧へ戻る ---------- */
+.works-back {
+	text-align: center;
+	margin-bottom: 48px;
+}
+.works-back__link {
+	display: inline-block;
+	padding: 12px 32px;
+	border: 2px solid var(--column-green);
+	border-radius: 4px;
+	color: var(--column-green);
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s;
+}
+.works-back__link:hover {
+	background: var(--column-green-dark);
+	color: #fff;
+	text-decoration: none;
+}
+
+/* ---------- Hero ---------- */
+.works-hero {
+	position: relative;
+	min-height: 430px;
+	height: 31vw;
+	display: flex;
+	align-items: center;
+	background: #fff;
+	overflow: hidden;
+}
+.works-hero .wp-block-group__inner-container {
+	width: 100%;
+}
+.works-hero__image {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 40%;
+	background-image: url('/wp-content/uploads/2026/08/공간시공-hero.png');
+	background-size: cover;
+	background-position: center;
+}
+.works-hero__image::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to right, #fff 0%, rgba(255,255,255,0) 35%);
+}
+.works-hero .container {
+	position: relative;
+	z-index: 1;
+}
+.works-hero__text {
+	max-width: 480px;
+	padding: 40px 0;
+}
+.works-hero__title {
+	margin: 0 0 16px;
+	color: #595757;
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 1.3;
+}
+.works-hero__desc {
+	margin: 0;
+	color: #595757;
+	font-size: 15px;
+	line-height: 1.9;
+}
+@media (max-width: 767px) {
+	.works-hero__text {
+		max-width: none;
+		padding: 28px 0;
+	}
+	.works-hero__title {
+		font-size: calc(113 / 1920 * 0.5 * 0.85 * 100vw);
+		margin-bottom: calc(60 / 1920 * 0.5 * 100vw);
+	}
+	.works-hero__desc {
+		font-size: calc(44 / 1920 * 0.5 * 100vw);
+	}
+}
+
+/* ---------- siteContent padding-top ---------- */
+.post-type-archive-works .siteContent,
+.tax-works_category .siteContent,
+.tax-works_tag .siteContent {
+	padding-top: 12px;
+}
+@media (min-width: 768px) {
+	.post-type-archive-works .siteContent,
+	.tax-works_category .siteContent,
+	.tax-works_tag .siteContent {
+		padding-top: 20px;
+	}
+}
+@media (min-width: 992px) {
+	.post-type-archive-works .siteContent,
+	.tax-works_category .siteContent,
+	.tax-works_tag .siteContent {
+		padding-top: 24px;
+	}
+}
+@media (min-width: 1200px) {
+	.post-type-archive-works .siteContent,
+	.tax-works_category .siteContent,
+	.tax-works_tag .siteContent {
+		padding-top: 28px;
+	}
+}
+
+/* ---------- 検索バー ---------- */
+.works-search-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin: 8px 0 24px;
+}
+.works-search-bar__title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--column-charcoal);
+	white-space: nowrap;
+}
+.works-search__form {
+	position: relative;
+	width: 100%;
+	max-width: 440px;
+}
+.works-search__input {
+	width: 100%;
+	padding: 10px 40px 10px 16px;
+	border: 1px solid rgba(73, 163, 57, 0.35);
+	border-radius: 4px;
+	font-size: 14px;
+	color: var(--column-charcoal);
+	background: #fff;
+	transition: border-color 0.2s ease;
+}
+.works-search__input::placeholder {
+	color: #b7b7b7;
+}
+.works-search__input:focus {
+	outline: none;
+	border-color: var(--column-green);
+}
+.works-search__btn {
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--column-green);
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+.works-search__btn:hover {
+	color: var(--column-green-dark);
+}
+.works-search__noresults {
+	margin-top: 24px;
+	padding: 20px;
+	background: var(--column-bg-soft);
+	color: var(--column-charcoal);
+	border-radius: 4px;
+	text-align: center;
+}
+
+/* ---------- カード ---------- */
+.works-card {
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.works-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+.works-card__link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+.works-card__link:hover {
+	text-decoration: none;
+}
+.works-card__thumb {
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	border-radius: 4px;
+	background: #f0f0f0;
+}
+.works-card__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.3s;
+}
+.works-card:hover .works-card__img {
+	transform: scale(1.04);
+}
+.works-card__no-image {
+	width: 100%;
+	height: 100%;
+	background: #dce4ed;
+}
+.works-card__body {
+	padding: 20px 18px 10px;
+}
+.works-card__date {
+	font-size: 11px;
+	font-weight: 400;
+	letter-spacing: 0.03em;
+	color: #999;
+	display: block;
+	margin-bottom: 10px;
+}
+.works-card__title {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.6;
+	margin-bottom: 8px;
+	color: var(--column-charcoal);
+	background: none;
+	border-bottom: none;
+	box-shadow: none;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/* Hard cap at 2 lines — mirrors .column-card__title. See note there. */
+	max-height: calc(1.6em * 2);
+	transition: color 0.25s ease;
+}
+.works-card__title::after {
+	content: none;
+}
+.works-card__link:hover .works-card__title {
+	color: var(--column-green);
+}
+.works-card__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 0 18px 10px;
+}
+.works-card--extra {
+	display: none;
+}
+.works-card--extra.is-search-match {
+	display: block;
+}
+.works-card.is-search-hidden {
+	display: none;
+}
+
+/* ---------- カテゴリ絞り込みタブ ---------- */
+.works-category-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 28px;
+	margin: 0 0 32px;
+	border-bottom: 1px solid #ddd;
+}
+.works-category-tabs__item {
+	display: inline-block;
+	padding: 8px 2px 10px;
+	margin-bottom: -1px;
+	border-bottom: 2px solid transparent;
+	color: var(--column-charcoal);
+	background: none;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.5;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: color 0.2s, border-color 0.2s;
+}
+.works-category-tabs__item:hover {
+	color: var(--column-green);
+	text-decoration: none;
+}
+.works-category-tabs__item.is-active {
+	color: var(--column-green);
+	border-bottom-color: var(--column-green);
+}
+
+/* ---------- グリッド ---------- */
+.works-archive__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 56px 40px;
+	margin-top: 32px;
+	margin-bottom: 40px;
+}
+.works-archive__grid.card-grid { grid-grid-template-columns: repeat(3, 1fr); }
+.card-grid .works-card__body {
+	padding: 24px 18px 12px;
+}
+.card-grid .works-card__tags {
+	padding: 0 18px 12px;
+}
+@media (min-width: 1200px) {
+	.works-archive__grid.card-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+	.works-archive__grid.card-grid { grid-template-columns: repeat(2, 1fr); }
+	.works-archive__grid { gap: 40px 28px; }
+	.card-grid .works-card__body { padding: 20px 18px 10px; }
+	.card-grid .works-card__tags { padding: 0 18px 10px; }
+}
+.post-type-archive-works .mainSection-col-two,
+.tax-works_category .mainSection-col-two {
+	width: 100%;
+}
+
+/* ---------- サイドバー (taxonomy-works_tag) ---------- */
+.works-archive__sidebar-heading {
+	font-size: 16px;
+	color: var(--column-charcoal);
+	background: none;
+	border-top: none;
+	border-right: none;
+	border-bottom: none;
+	border-left: 4px solid var(--column-green);
+	box-shadow: none;
+	padding: 0 0 0 10px;
+	margin-bottom: 16px;
+}
+.works-archive__tag-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.works-archive__tag-list li {
+	margin-bottom: 8px;
+}
+.works-archive__tag-link {
+	display: block;
+	padding: 10px 14px;
+	background: var(--column-bg-soft);
+	border: 1px solid var(--column-green);
+	border-radius: 4px;
+	color: var(--column-green);
+	font-size: 14px;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s;
+}
+.works-archive__tag-link:hover {
+	background: var(--column-green-dark);
+	color: #fff;
+	text-decoration: none;
+}
+.works-archive__tag-link.is-active {
+	background: var(--column-green);
+	color: #fff;
+	font-weight: 700;
+}
+.works-archive__current-tag {
+	font-size: 22px;
+	color: var(--column-charcoal);
+	border-left: 4px solid var(--column-green);
+	padding-left: 12px;
+	margin-bottom: 24px;
+}
+
+/* ---------- フローティング タグパネル ---------- */
+.works-tag-float-anchor {
+	height: 0;
+}
+.works-tag-float {
+	position: fixed;
+	top: 50%;
+	right: 0;
+	z-index: 60;
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: flex-start;
+	transform: translateY(-50%);
+}
+.works-tag-float__handle {
+	flex: 0 0 auto;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+	background: var(--column-green-dark);
+	border: 1px solid var(--column-green-dark);
+	border-right: none;
+	border-radius: 6px 0 0 6px;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.15em;
+	padding: 16px 6px;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+}
+.works-tag-float__handle:hover,
+.works-tag-float.is-open .works-tag-float__handle {
+	background: var(--column-green);
+	color: #fff;
+}
+.works-tag-float__panel {
+	flex: 0 0 auto;
+	max-width: 0;
+	margin-right: 0;
+	overflow: hidden;
+	opacity: 0;
+	background: var(--column-green-dark);
+	border: 1px solid var(--column-green-dark);
+	border-radius: 6px;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+	transform: translateX(12px);
+	pointer-events: none;
+	transition: max-width 0.28s ease, opacity 0.22s ease, transform 0.28s ease,
+		margin-right 0.28s ease;
+}
+.works-tag-float.is-open .works-tag-float__panel {
+	max-width: 190px;
+	opacity: 1;
+	transform: translateX(0);
+	margin-right: 8px;
+	pointer-events: auto;
+}
+.works-tag-float__panel-inner {
+	width: 190px;
+	padding: 14px;
+}
+.works-tag-float__panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+.works-tag-float__heading {
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	white-space: nowrap;
+}
+.works-tag-float__close {
+	background: none;
+	border: none;
+	color: #fff;
+	font-size: 18px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 0 0 8px;
+}
+.works-tag-float__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.works-tag-float__link {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.3;
+	text-decoration: none;
+	text-align: left;
+	transition: opacity 0.2s;
+}
+.works-tag-float__link:hover {
+	opacity: 0.8;
+	text-decoration: underline;
+}
+
+/* ---------- パンくず hover ---------- */
+.post-type-archive-works .breadcrumb a,
+.single-works .breadcrumb a {
+	transition: color 0.25s ease;
+}
+.post-type-archive-works .breadcrumb a:hover,
+.single-works .breadcrumb a:hover {
+	color: var(--column-green);
+	text-decoration: underline;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767px) {
+	.works-category-tabs {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 4px;
+	}
+	.works-category-tabs__item {
+		flex: 0 0 auto;
+	}
+	.works-search-bar {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+	}
+	.works-search__form {
+		max-width: 100%;
+	}
+	.works-single__title {
+		font-size: 24px;
+	}
+	.works-archive__grid,
+	.works-archive__grid.card-grid {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+	.works-archive__grid {
+		margin-top: 32px;
+	}
+	.works-archive__current-tag {
+		font-size: 18px;
+	}
+	.works-archive__sidebar {
+		margin-top: 32px;
+	}
+	.works-tag-float {
+		display: none;
+	}
+}
+
+/* ===== [WORKS-CPT] END ===== */
+
