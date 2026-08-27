@@ -1,0 +1,46 @@
+# ── OS / filesystem ─────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editors / IDE ───────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Node / tooling ──────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# ── Claude Code local state ─────────────────────
+.claude/
+scheduled_tasks.lock
+
+# ── Logs ────────────────────────────────────────
+*.log
+logs/
+
+# ── Secrets / env ───────────────────────────────
+.env
+.env.*
+*.env
+credentials.json
+
+# ── WordPress local config (must never leave the machine) ─
+wp-config.php
+wp-config-local.php
+
+# ── Site backup: only split parts + SHA256SUMS are tracked ─
+# The raw .wpress (1GB+) must be reassembled from parts/.
+# Anything else with these extensions is scratch and stays local.
+*.wpress
+!site-backup/parts/**
+
+# ── Scratch / working dumps (never commit) ──────
+scratch/
+tmp/
+_tmp*/
+_wip*/
