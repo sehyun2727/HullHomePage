@@ -10,8 +10,8 @@
 - [What this is](#what-this-is)
 - [Quick start — get the site running locally in ~10 minutes](#quick-start)
 - [Repository layout](#repository-layout)
-- [Development history](#development-history)
-- [What's left to do](#whats-left-to-do)
+- [Roadmap — what to work on next](#roadmap--what-to-work-on-next)
+- [Deployment to production](#deployment-to-production)
 - [Working principles](#working-principles)
 - [Where to look next](#where-to-look-next)
 - [Access and credentials](#access-and-credentials)
@@ -22,21 +22,22 @@
 
 - **Project:** IA-level rewrite of `hull-inc.jp`, the corporate site of HULL Corporation (Japan) — a digital-signage, sign, space-construction, and reform contractor.
 - **Reason:** Company-wide reorganization takes effect **2026-09**. The existing IA does not fit the new org structure, so the site is being restructured before the reorg lands.
-- **Current stage:** The local site is functionally complete. Design/CSS on `/space/`, `/sign/`, `/reform-business/` is finished (as of 2026-08-24). What remains is edge polish and legacy-page cleanup — see [What's left](#whats-left-to-do).
-- **Deployment target:** Cutover between **2026-08-20~25**, public launch **2026-08-26** (see `CLAUDE.md` §1).
+- **Current stage:** The local site is functionally complete. Design/CSS on `/space/`, `/sign/`, `/reform-business/` is finished (2026-08-24). What remains is one page-level bug fix, legacy-page cleanup, then production cutover.
+- **Deployment target:** Cutover between **2026-08-20~25**, public launch **2026-08-26**.
 
-Full narrative — motivation, constraints, IA rationale, historical context, working principles — is in **[CLAUDE.md](CLAUDE.md)**. Read it before touching anything nontrivial.
+For the full narrative — motivation, constraints, IA rationale, chronological history, all past decisions — see **[CLAUDE.md](CLAUDE.md)**. Read it before touching anything nontrivial.
 
 ---
 
 ## Quick start
+
+Get from `git clone` to a working local site in ~10 minutes.
 
 ### Requirements
 - Windows 10/11 or macOS
 - Git
 - [Local by Flywheel](https://localwp.com/) (free)
 - ~5 GB free disk space
-- ~10 minutes of your time
 
 ### Steps
 
@@ -54,22 +55,22 @@ Full narrative — motivation, constraints, IA rationale, historical context, wo
    ```
    Detailed procedure incl. Windows PowerShell version: [`site-backup/README.md`](site-backup/README.md).
 
-3. **Install Local by Flywheel** if you don't have it, then create a new WordPress site.
-   - Site name: `hull-homepage-renewal` (matches paths in `CLAUDE.md`)
+3. **Install Local by Flywheel**, then create a new WordPress site.
+   - Site name: `hull-homepage-renewal` (matches paths used in `CLAUDE.md`)
    - Environment: Preferred (PHP 8.x, MySQL 8.x)
 
-4. **Install the "All-in-One WP Migration" plugin** on that site (Plugins → Add New → search "All-in-One WP Migration" → Install → Activate).
+4. **Install the "All-in-One WP Migration" plugin** on the site (Plugins → Add New → search → Install → Activate).
 
 5. **Import** the reassembled `hull-site.wpress` via **All-in-One WP Migration → Import → File**. Wait 5–15 min.
 
 6. **Log in** with the admin credentials from the previous owner (see [Access and credentials](#access-and-credentials)).
 
-7. **Re-save permalinks:** Settings → Permalinks → **Save Changes** (no changes needed — regenerates rewrite rules; without this `/column/*` and `/works/*` will 404).
+7. **Re-save permalinks:** Settings → Permalinks → **Save Changes**. Without this step `/column/*` and `/works/*` return 404.
 
 8. **Verify** every top-level route renders:
    `/`, `/space/`, `/vision/` (or `/digital-signage/`), `/sign/`, `/reform-business/`, `/philosophy/`, `/company/`, `/column/`, `/works/`, `/archives/category/news/`.
 
-If styles look off, **hard-refresh** (Ctrl+Shift+R). Lightning theme caches CSS via a hardcoded version number.
+Hard-refresh (Ctrl+Shift+R) if styles look off — Lightning caches CSS via a hardcoded version number.
 
 ---
 
@@ -78,20 +79,20 @@ If styles look off, **hard-refresh** (Ctrl+Shift+R). Lightning theme caches CSS 
 ```
 hull-homepage-handover/
 ├── README.md                    ← you are here
-├── CLAUDE.md                    project brief: goals, IA, principles, history (read first)
+├── CLAUDE.md                    project brief: goals, IA, principles, full history
 ├── .gitignore
 │
 ├── docs/                        operational documentation
-│   ├── setup.md                 local setup procedure (companion to Quick start above)
+│   ├── setup.md                 local setup (companion to Quick start above)
 │   ├── deployment.md            how to push the local site to hull-inc.jp
 │   ├── architecture.md          IA tree, page inventory (post IDs), URL policy, CSS conventions
-│   ├── file-naming-rules.md     English-only kebab-case naming, with rationale
+│   ├── file-naming-rules.md     English-only kebab-case naming
 │   └── decisions-log.md         D-001..D-009 — each design decision + its "why"
 │
 ├── spec/                        original v3 planning documents (docx)
 │   ├── hull-homepage-renewal-plan-v3.ja.docx
 │   ├── hull-homepage-renewal-plan-v3.ko.docx
-│   └── README.md                filename mapping + when to open which doc
+│   └── README.md
 │
 ├── theme-source/
 │   ├── lightning-child/         mirror of the live child theme for edit-history tracking
@@ -99,106 +100,112 @@ hull-homepage-handover/
 │
 ├── assets/
 │   ├── photos/                  28 pre-upload source photos (kebab-case)
-│   │   └── legacy-green-logo/   22 files — older green logo + WP-generated sizes
-│   ├── design-guidelines/       5 design reference mocks (never uploaded to the site)
-│   └── README.md                filename mapping (Korean/Japanese → English)
+│   │   └── legacy-green-logo/   22 files — older green logo + WP sizes
+│   ├── design-guidelines/       5 design reference mocks
+│   └── README.md
 │
 └── site-backup/
-    ├── parts/
-    │   ├── hull-site.wpress.part.000..015  16 chunks, ~90 MB each
-    │   └── SHA256SUMS                      per-part integrity checksums
-    ├── wpress-original.sha256              reassembled-file checksum
-    └── README.md                           restore procedure (verify → reassemble → import)
+    ├── parts/                   hull-site.wpress.part.000..015 (16 chunks, ~90 MB each)
+    │   └── SHA256SUMS
+    ├── wpress-original.sha256
+    └── README.md                restore procedure
 ```
 
-Everything the next developer needs is inside this folder. Nothing important lives outside it except **credentials** (delivered separately) and the **Local by Flywheel install** (created fresh on the new laptop).
+Everything needed is inside this folder. Credentials are delivered separately (see below).
 
 ---
 
-## Development history
+## Roadmap — what to work on next
 
-Full narrative in [CLAUDE.md](CLAUDE.md). Key milestones:
+Ordered by urgency. Every item includes what to change, why, how to verify, and time estimate.
 
-### The two prior states
-- **`hull-column-dev`** (`C:\Users\sehyu\Local Sites\hull-column-dev`) — earlier column-only feature work. Frozen. Not the master workspace.
-- **`hull-homepage-renewal`** (`C:\Users\sehyu\Local Sites\hull-homepage-renewal`) — the **master local site**. A 100% mirror of live `hull-inc.jp` as of the 2026-07-31 export, plus all renewal work since.
+### 🔴 Priority 1 — before public launch (target: 2026-08-26)
 
-Both were merged forward: this handover carries **only the renewal workspace state**.
+#### [1] Full backup of live `hull-inc.jp` before cutover
+- **Why:** Insurance. If cutover breaks something, you need to be able to roll back within minutes.
+- **How:** Log into `hull-inc.jp/wp-admin` → All-in-One WP Migration → Export → File. Save the `.wpress` locally *and* to an external drive.
+- **Retain for:** at least 30 days post-launch.
+- **Verify:** `.wpress` file downloaded, size sanity-checked (should be similar to the local one, ~1.5 GB).
+- **Est:** 15 min (5 min click + 10 min download).
 
-### Renewal milestones (chronological)
+#### [2] TOP page HULL Space card link fix (post 2659)
+- **Symptom:** On the TOP page, the "About HULL" section's HULL Space card has the title `空間施工事業` but its link points to `/sign/` (a `サイン事業` page). This is the same shape of bug that was fixed in the footer widget on 2026-08-17 (`CLAUDE.md` §5, footer bug fix).
+- **Why:** The TOP page redesign was out of scope for the prior work, so this was recorded but not fixed. It's a wrong click destination for real users.
+- **Fix:** Change the card's `href` from `/sign/` to `/space/`. In wp-admin, edit post 2659 → find the About HULL card block → update the button link.
+- **Verify:** Hover the card in TOP, click, confirm it lands on `/space/`.
+- **Est:** 15 min.
 
-| When | Milestone |
-|---|---|
-| 2026-07-31 | Import of live `hull-inc.jp` into the renewal workspace (100% mirror baseline) |
-| 2026-07-31 | Column CPT / taxonomy / 20 articles / thumbnails migrated in; `lightning-child` merged in |
-| Early Aug | Menu IA rebuilt to match spec v3 (11 items across the finalized tree) |
-| Early Aug | HULL VISION menu → single `/digital-signage/` link |
-| Early Aug | HULL SPACE sub-pages (`/sign/`, `/reform-business/`) created |
-| Early Aug | Column public URL restored to `/column/` (with_front=false); `/archives/column/` regression resolved |
-| Early Aug | `会社情報` → `企業概要` / `企業理念` two-page consolidation completed (2961 + 3080, message page 3077 legacy) |
-| Early Aug | Top-level menu placeholders wired to real page links (`/digital-signage/`, `/sign/`, `/archives/category/news/`, `/company/`) |
-| 2026-08-17 | HULL SPACE label rename: `サイン事業` / `空間施工事業` (URLs unchanged, labels updated on H1/menu/AIOSEO) |
-| 2026-08-17 | Footer widget bug fix: HULL SPACE row was linking `/sign/` with wrong JP label → now `/space/`, JP label removed |
-| 2026-08-17 | HULL SPACE parent landing (post 7005, `/space/`) full visual redesign — hero, about, works, strengths, CTA; CSS all scoped `body.page-id-7005` |
-| 2026-08-24 | T3 v2 in-page redesign for `/sign/` (3094) and `/reform-business/` (6834); global components `sec-head__ja` / `sec-head__en` / `num-list__num` landed with `!important` to defeat Lightning legacy |
-| 2026-08-26 | `/works/` page (post 7213) created |
-| 2026-08-27 | This handover package built (12-phase build documented via git log) |
+#### [3] Deploy local site to production
+- **Full procedure:** [`docs/deployment.md`](docs/deployment.md)
+- **Short version:** Export the local site's `.wpress` → import over `hull-inc.jp` via All-in-One WP Migration → re-save permalinks → verify every route → search-replace any surviving `hull-homepage-renewal.local` URLs → cache flush.
+- **Est:** 60–90 min total (mostly waiting on file transfers).
+- **⚠️ Only the previous owner or the incoming developer with wp-admin access can do this.** No SSH, no FTP.
 
-### Handover package build history (this repo)
+### 🟡 Priority 2 — cleanup, within 2 weeks post-launch
 
-Every commit is prefixed `Phase N:`. Walk `git log --oneline` for the sequence:
+#### [4] Legacy page cleanup
+- **Pages to handle:** `旧会社概要` (slug: `about`, currently private), `/services_old`, `/signdisplay`, and anything else the old IA left behind.
+- **Rule:** Never delete pages. Set to `private` and add 301 redirect if there's an inbound link expectation.
+- **Plugin to use:** Redirection (already installed).
+- **Verify:** All old URLs return 301 to the correct new page; no 404 in Search Console for known old URLs.
+- **Est:** 30–60 min depending on how many URLs.
 
-| Phase | What was added |
-|---|---|
-| 1 | Repo scaffold (.gitignore, README skeleton, CLAUDE.md) |
-| 2 | `docs/` skeleton (5 files) |
-| 3 | `spec/` docx (JP + KO), renamed to kebab-case |
-| 4 | `theme-source/lightning-child/` full copy |
-| 5 | `assets/photos/` 28 + `legacy-green-logo/` 22 + `design-guidelines/` 5, all kebab-cased |
-| 6 | (Local Sites work — fresh `.wpress` export; no commit) |
-| 7+9 | TOP hero URL normalized to English + fresh `.wpress` reflecting that state + split into 16 parts (committed as 1/3 docs, 2/3 parts 000-007, 3/3 parts 008-015 to keep individual pushes under ~720 MB after a prior 1.4 GB push hit HTTP 408) |
-| 8 | This README |
-| 10 | End-to-end restore verification |
-| 11 | USB handover .zip build |
-| 12 | Final push confirmation |
+#### [5] Message page (`/message/`, post 3077) decision
+- **Situation:** Content was migrated into `/philosophy/` (企業理念) but the page itself is still `publish` and creates duplicate content. Not linked from any menu.
+- **Options:** (a) unpublish → private, (b) delete-and-301 to `/philosophy/`, (c) leave as-is if you find any inbound link.
+- **⚠️ This is destructive — get owner approval before executing.**
+- **Est:** 15 min after decision.
+
+#### [6] Search Console + Analytics sanity check
+- **Why:** After a big IA change, new URLs need to be picked up by Google. Old URLs need to redirect (see [4]).
+- **How:** Submit new sitemap, verify no unexpected 404s, check crawl coverage after 3-7 days.
+- **Est:** 15 min setup, then monitoring for a week.
+
+### 🟢 Priority 3 — enhancement, no fixed deadline
+
+#### [7] HULL VISION landing internal signage navigation
+- **What:** Add internal links from `/digital-signage/` down to DokoDemo signage and TopBoard signage sub-pages.
+- **Why deferred:** The previous owner marked this "나중에" (later). Structural change, not a bug fix.
+- **Est:** 2–3 hours (page structure + content coordination with Yoshizawa-san).
+
+#### [8] Reform page real content
+- **What:** `/reform-business/` (post 6834) has scaffolding but the PDF-based real content layout hasn't been finalized.
+- **Who:** Yoshizawa-san can edit copy/images from wp-admin. Structural layout may need dev help.
+- **Est:** Variable, depends on final PDF spec.
+
+#### [9] Image optimization + SEO plugins
+- **Recommended:** Smush (image auto-optimization), Rank Math or Yoast (SEO metadata).
+- **Why not now:** Not blocking launch. Add after cutover.
+- **Est:** 30 min each.
+
+#### [10] Unused-theme cleanup in Local
+- **What:** `wp-content/themes/` ships with 15+ unused themes (`affinger5×3`, `cocoon×2`, several `twentytwenty*`).
+- **Warning:** Per delete-scope rule, never touch `Local Sites/` files without explicit confirmation. If disk becomes tight, get user approval first.
 
 ---
 
-## What's left to do
+## Deployment to production
 
-### Explicitly out of scope for this handover, but tracked for the next owner
+Detailed procedure is [`docs/deployment.md`](docs/deployment.md). Load-bearing summary:
 
-- **TOP page (post 2659, `/`) HULL Space card link mismatch** — card title is `空間施工事業` but the link points to `/sign/` (a `サイン事業` page). Same bug shape as the footer fix from 2026-08-17, but TOP page redesign was out of the prior scope. Recorded 2026-08-17, still pending. See `CLAUDE.md` §5.
-- **Legacy page cleanup** — `旧会社概要` (slug: `about`, private), `/services_old`, `/signdisplay` etc. should be tidied. 301 redirects need to be added for any URL that gets deprecated.
-- **Message page (`/message/`, post 3077)** — content already migrated into `/philosophy/`, but the page itself is still `publish`. Duplicate content, not linked from any menu. Decision on delete/private/redirect is pending — flagged as a destructive action that needs owner approval before executing.
-- **HULL VISION landing (`/digital-signage/`)** — internal navigation to DokoDemo signage / TopBoard signage sub-pages was explicitly deferred by the user ("나중에"). Structural change to that page, not a bugfix.
-- **Reform page real content (PDF-based layout)** — deferrable to post-launch. Yoshizawa-san can edit copy/images from wp-admin.
-
-### Post-launch, but before public announcement
-
-- **Full pre-cutover backup** of the live site (see `docs/deployment.md` step 1).
-- **Search-replace of any surviving local URLs** (`hull-homepage-renewal.local`) after import to live — plugin: Better Search Replace, or ai1wm's built-in.
-- **Cache/CDN flush** across whatever the live server uses.
-- **Real-device mobile check** (not just responsive mode in a browser).
-
-### Deferrable, low priority
-
-- **Image optimization plugin** (Smush or similar) — recommended before launch, not strictly required.
-- **Consolidate unused themes** — the local `wp-content/themes/` still ships with `affinger5×3`, `cocoon×2`, several `twentytwenty*`, etc. Kept intact per the delete-scope memory ("never touch WP files under `Local Sites/`"). Consider pruning after cutover if disk becomes tight.
+- **Model:** Whole-site replacement. The local site is exported as one `.wpress` and imported over live. No diff-based sync, no file-by-file transfer.
+- **Access constraint:** `hull-inc.jp` is **wp-admin only** — no SSH, no FTP, no direct DB. The `All-in-One WP Migration` plugin's Import path is the only practical channel for a change this large.
+- **Bottleneck:** The developer with wp-admin credentials is the sole person who can push. Plan accordingly.
+- **Rollback:** Keep the pre-cutover live backup ([Priority 1 item 1]) accessible for 30+ days.
 
 ---
 
 ## Working principles
 
-Full list in [CLAUDE.md](CLAUDE.md) §6-§7. The load-bearing ones:
+Full list in [CLAUDE.md](CLAUDE.md) §6-§7. The ones that will bite you if ignored:
 
-1. **Method approval before deviating.** If the instructed method is blocked, report first — do not switch on your own, especially not to something flagged as risky. (This rule exists because of a past incident.)
+1. **Method approval before deviating.** If the instructed method is blocked, report first — do not switch on your own, especially not to something flagged as risky.
 2. **"Investigation only" means don't execute.** Content merges and structural edits are separate steps from research.
-3. **Ground truth is the live DB, not backups.** Any backup zip/json in this repo is a moment-in-time snapshot. For "what does the site actually look like right now", query via WP-CLI.
-4. **Verify environment-specific configs.** `wpcli-php.ini` / port numbers / DB names are per-site; do not copy across without checking. (Past incident: wrong port pointed at a different site's DB.)
+3. **Ground truth is the live DB, not backups.** Any backup file in this repo is a moment-in-time snapshot. For "what does the site actually look like right now?", query via WP-CLI.
+4. **Verify environment-specific configs.** `wpcli-php.ini` / port numbers / DB names are per-site; do not copy across sites without checking.
 5. **Destructive actions require prior report.** Deletes, mass updates, DB schema changes.
-6. **Reports frame status against the confirmed spec, not "what I did".** For each item: complete / partial / not done, verified by hitting the actual URL.
-7. **Never delete pages.** Set to `private` instead. Recoverability is the reason.
+6. **Never delete pages.** Set to `private` instead. Recoverability is the reason.
+7. **Never delete files under `~/Local Sites/`.** That's the WordPress install itself. Other cleanup is fine on request.
 
 ---
 
@@ -206,15 +213,15 @@ Full list in [CLAUDE.md](CLAUDE.md) §6-§7. The load-bearing ones:
 
 | Question | File |
 |---|---|
-| "What is this project? What's the goal?" | [CLAUDE.md](CLAUDE.md) |
-| "How do I set this up locally?" | Quick start above → [docs/setup.md](docs/setup.md) → [site-backup/README.md](site-backup/README.md) |
-| "How does the site get deployed to hull-inc.jp?" | [docs/deployment.md](docs/deployment.md) |
+| "What is this project? What's the goal? What's the full history?" | [CLAUDE.md](CLAUDE.md) |
+| "How do I set this up locally?" | [Quick start](#quick-start) → [docs/setup.md](docs/setup.md) → [site-backup/README.md](site-backup/README.md) |
+| "How does the site get deployed to `hull-inc.jp`?" | [docs/deployment.md](docs/deployment.md) |
 | "What are the pages? What are the post IDs?" | [docs/architecture.md](docs/architecture.md) |
 | "Why is this like this?" (any specific decision) | [docs/decisions-log.md](docs/decisions-log.md) |
 | "How do I name a new file?" | [docs/file-naming-rules.md](docs/file-naming-rules.md) |
-| "Where are the source photos I might need?" | [assets/README.md](assets/README.md) |
+| "Where are the source photos?" | [assets/README.md](assets/README.md) |
 | "What was the original plan (v3)?" | [spec/README.md](spec/README.md) → the two docx files |
-| "Where is the child theme?" | [theme-source/README.md](theme-source/README.md) (mirror) + `~/Local Sites/.../lightning-child/` (actual) |
+| "Where is the child theme?" | [theme-source/README.md](theme-source/README.md) + `~/Local Sites/.../lightning-child/` |
 
 ---
 
@@ -222,19 +229,19 @@ Full list in [CLAUDE.md](CLAUDE.md) §6-§7. The load-bearing ones:
 
 **None of the following live in this repo.** All are delivered through a separate secure channel by the previous owner:
 
-- WordPress admin username & password (both `hull-inc.jp` live and any test accounts)
+- WordPress admin username & password (both `hull-inc.jp` live and local test accounts)
 - Any hosting-panel access if it exists
-- GitHub personal access token, if the outgoing developer's credential is being retired
-- Domain registrar login (only if the handover includes DNS ownership — usually stays with the internal team)
+- GitHub personal access token (if the outgoing developer's credential is being retired)
+- Domain registrar login (usually stays with the internal team, but confirm)
 - Yoshizawa-san's contact for structural questions
 
 If a credential you need is missing from the handover packet, contact the previous owner first, then the internal team (Yoshizawa-san).
 
 ---
 
-## Housekeeping notes for the next owner
+## Housekeeping — keeping this repo honest
 
-- **This repo will drift** every time the site changes and a new `.wpress` is exported. When you re-export, replace `site-backup/parts/*`, regenerate `SHA256SUMS`, update `wpress-original.sha256`, and bump the "Backup metadata" table in `site-backup/README.md`.
-- **Child theme edits** live at `~/Local Sites/hull-homepage-renewal/app/public/wp-content/themes/lightning-child/`. After you edit a file there, copy it back into `theme-source/lightning-child/` in this repo and commit — that keeps git history honest.
-- **Global page CSS** is not on disk — it lives in Additional CSS (post 2641), edited via wp-admin. See [docs/architecture.md](docs/architecture.md) for the section-marker convention (`/* ===== [TOP] START/END ===== */`, etc.).
-- **Push size** — 16 × 90 MB parts push cleanly if you split each push into 3 commits (docs + parts 000-007 + parts 008-015). A single monolithic 1.4 GB push will time out (HTTP 408). This is what the "Phase 7+9 (1/3, 2/3, 3/3)" commits in the history look like.
+- **After editing the child theme** (`~/Local Sites/hull-homepage-renewal/.../lightning-child/`): copy the changed file back into `theme-source/lightning-child/` in this repo and commit. Otherwise git history and the deployed theme drift.
+- **After every `.wpress` re-export:** replace `site-backup/parts/*`, regenerate `SHA256SUMS`, update `wpress-original.sha256`, bump the "Backup metadata" table in `site-backup/README.md`.
+- **Push size limits:** the 16 × 90 MB parts pushed cleanly when the push was split into 3 commits (docs + parts 000-007 + parts 008-015). A monolithic 1.4 GB push times out (HTTP 408). Keep the 3-commit pattern.
+- **Global page CSS is not on disk** — it lives in Additional CSS (post 2641), edited via wp-admin. Section markers (`/* ===== [TOP] START/END ===== */`, `[SPACE]`, `[VISION]`, etc.) must be preserved; imports rely on them. See [`docs/architecture.md`](docs/architecture.md).
