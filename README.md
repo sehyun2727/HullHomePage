@@ -1,247 +1,150 @@
-# HULL Homepage Renewal — Handover Package
+# HULL Homepage Renewal
 
-> Full handover of the **HULL Corporation homepage renewal** (`hull-inc.jp`) as of **2026-08-27**.
-> `git clone` + one archive restore = a working local site, ready to continue development.
+Complete snapshot of the **HULL Corporation homepage renewal** (`hull-inc.jp`) as of **2026-08-27**, ready for a new developer to clone and continue.
 
----
-
-## Table of contents
-
-- [What this is](#what-this-is)
-- [Quick start — get the site running locally in ~10 minutes](#quick-start)
-- [Repository layout](#repository-layout)
-- [Roadmap — what to work on next](#roadmap--what-to-work-on-next)
-- [Deployment to production](#deployment-to-production)
-- [Working principles](#working-principles)
-- [Where to look next](#where-to-look-next)
-- [Access and credentials](#access-and-credentials)
+For the project background, IA, and decision history, read **[CLAUDE.md](CLAUDE.md)**.
 
 ---
 
-## What this is
+## What is in this repo
 
-- **Project:** IA-level rewrite of `hull-inc.jp`, the corporate site of HULL Corporation (Japan) — a digital-signage, sign, space-construction, and reform contractor.
-- **Reason:** Company-wide reorganization takes effect **2026-09**. The existing IA does not fit the new org structure, so the site is being restructured before the reorg lands.
-- **Current stage:** The local site is functionally complete. Design/CSS on `/space/`, `/sign/`, `/reform-business/` is finished (2026-08-24). What remains is one page-level bug fix, legacy-page cleanup, then production cutover.
-- **Deployment target:** Cutover between **2026-08-20~25**, public launch **2026-08-26**.
-
-For the full narrative — motivation, constraints, IA rationale, chronological history, all past decisions — see **[CLAUDE.md](CLAUDE.md)**. Read it before touching anything nontrivial.
-
----
-
-## Quick start
-
-Get from `git clone` to a working local site in ~10 minutes.
-
-### Requirements
-- Windows 10/11 or macOS
-- Git
-- [Local by Flywheel](https://localwp.com/) (free)
-- ~5 GB free disk space
-
-### Steps
-
-1. **Clone this repo** to somewhere convenient (NOT inside `~/Local Sites/`).
-   ```bash
-   git clone https://github.com/sehyun2727/HullHomePage.git hull-homepage-handover
-   cd hull-homepage-handover
-   ```
-
-2. **Reassemble the site backup** — combines 16 split `.wpress` parts into one file.
-   ```bash
-   cd site-backup
-   cat parts/hull-site.wpress.part.* > hull-site.wpress
-   sha256sum -c wpress-original.sha256   # should say "OK"
-   ```
-   Detailed procedure incl. Windows PowerShell version: [`site-backup/README.md`](site-backup/README.md).
-
-3. **Install Local by Flywheel**, then create a new WordPress site.
-   - Site name: `hull-homepage-renewal` (matches paths used in `CLAUDE.md`)
-   - Environment: Preferred (PHP 8.x, MySQL 8.x)
-
-4. **Install the "All-in-One WP Migration" plugin** on the site (Plugins → Add New → search → Install → Activate).
-
-5. **Import** the reassembled `hull-site.wpress` via **All-in-One WP Migration → Import → File**. Wait 5–15 min.
-
-6. **Log in** with the admin credentials from the previous owner (see [Access and credentials](#access-and-credentials)).
-
-7. **Re-save permalinks:** Settings → Permalinks → **Save Changes**. Without this step `/column/*` and `/works/*` return 404.
-
-8. **Verify** every top-level route renders:
-   `/`, `/space/`, `/vision/` (or `/digital-signage/`), `/sign/`, `/reform-business/`, `/philosophy/`, `/company/`, `/column/`, `/works/`, `/archives/category/news/`.
-
-Hard-refresh (Ctrl+Shift+R) if styles look off — Lightning caches CSS via a hardcoded version number.
-
----
-
-## Repository layout
+Everything you need to bring the site up locally in one place:
 
 ```
 hull-homepage-handover/
-├── README.md                    ← you are here
-├── CLAUDE.md                    project brief: goals, IA, principles, full history
-├── .gitignore
-│
-├── docs/                        operational documentation
-│   ├── setup.md                 local setup (companion to Quick start above)
-│   ├── deployment.md            how to push the local site to hull-inc.jp
-│   ├── architecture.md          IA tree, page inventory (post IDs), URL policy, CSS conventions
-│   ├── file-naming-rules.md     English-only kebab-case naming
-│   └── decisions-log.md         D-001..D-009 — each design decision + its "why"
-│
-├── spec/                        original v3 planning documents (docx)
-│   ├── hull-homepage-renewal-plan-v3.ja.docx
-│   ├── hull-homepage-renewal-plan-v3.ko.docx
-│   └── README.md
-│
-├── theme-source/
-│   ├── lightning-child/         mirror of the live child theme for edit-history tracking
-│   └── README.md                editing workflow + parent theme note
-│
-├── assets/
-│   ├── photos/                  28 pre-upload source photos (kebab-case)
-│   │   └── legacy-green-logo/   22 files — older green logo + WP sizes
-│   ├── design-guidelines/       5 design reference mocks
-│   └── README.md
-│
-└── site-backup/
-    ├── parts/                   hull-site.wpress.part.000..015 (16 chunks, ~90 MB each)
-    │   └── SHA256SUMS
-    ├── wpress-original.sha256
-    └── README.md                restore procedure
+├── site-backup/                complete WordPress site (DB + media + themes + plugins)
+│   ├── parts/                  split into 16 × ~90 MB chunks so GitHub accepts them
+│   │   ├── hull-site.wpress.part.000..015
+│   │   └── SHA256SUMS
+│   ├── wpress-original.sha256
+│   └── README.md               reassemble + import procedure
+├── theme-source/lightning-child/   the child theme, mirrored for edit-history tracking
+├── assets/                     source photos, design guidelines, filename mapping
+├── spec/                       original v3 plan documents (JA + KO docx)
+├── docs/                       setup, deployment, architecture, decisions log
+├── CLAUDE.md                   project brief (goals, IA, working history)
+└── README.md                   you are here
 ```
 
-Everything needed is inside this folder. Credentials are delivered separately (see below).
+The site itself is the `.wpress` file split under `site-backup/parts/`. Everything else is context, source, or reference material.
 
 ---
 
-## Roadmap — what to work on next
+## How the site was developed
 
-Ordered by urgency. Every item includes what to change, why, how to verify, and time estimate.
-
-### 🔴 Priority 1 — before public launch (target: 2026-08-26)
-
-#### [1] Full backup of live `hull-inc.jp` before cutover
-- **Why:** Insurance. If cutover breaks something, you need to be able to roll back within minutes.
-- **How:** Log into `hull-inc.jp/wp-admin` → All-in-One WP Migration → Export → File. Save the `.wpress` locally *and* to an external drive.
-- **Retain for:** at least 30 days post-launch.
-- **Verify:** `.wpress` file downloaded, size sanity-checked (should be similar to the local one, ~1.5 GB).
-- **Est:** 15 min (5 min click + 10 min download).
-
-#### [2] TOP page HULL Space card link fix (post 2659)
-- **Symptom:** On the TOP page, the "About HULL" section's HULL Space card has the title `空間施工事業` but its link points to `/sign/` (a `サイン事業` page). This is the same shape of bug that was fixed in the footer widget on 2026-08-17 (`CLAUDE.md` §5, footer bug fix).
-- **Why:** The TOP page redesign was out of scope for the prior work, so this was recorded but not fixed. It's a wrong click destination for real users.
-- **Fix:** Change the card's `href` from `/sign/` to `/space/`. In wp-admin, edit post 2659 → find the About HULL card block → update the button link.
-- **Verify:** Hover the card in TOP, click, confirm it lands on `/space/`.
-- **Est:** 15 min.
-
-#### [3] Deploy local site to production
-- **Full procedure:** [`docs/deployment.md`](docs/deployment.md)
-- **Short version:** Export the local site's `.wpress` → import over `hull-inc.jp` via All-in-One WP Migration → re-save permalinks → verify every route → search-replace any surviving `hull-homepage-renewal.local` URLs → cache flush.
-- **Est:** 60–90 min total (mostly waiting on file transfers).
-- **⚠️ Only the previous owner or the incoming developer with wp-admin access can do this.** No SSH, no FTP.
-
-### 🟡 Priority 2 — cleanup, within 2 weeks post-launch
-
-#### [4] Legacy page cleanup
-- **Pages to handle:** `旧会社概要` (slug: `about`, currently private), `/services_old`, `/signdisplay`, and anything else the old IA left behind.
-- **Rule:** Never delete pages. Set to `private` and add 301 redirect if there's an inbound link expectation.
-- **Plugin to use:** Redirection (already installed).
-- **Verify:** All old URLs return 301 to the correct new page; no 404 in Search Console for known old URLs.
-- **Est:** 30–60 min depending on how many URLs.
-
-#### [5] Message page (`/message/`, post 3077) decision
-- **Situation:** Content was migrated into `/philosophy/` (企業理念) but the page itself is still `publish` and creates duplicate content. Not linked from any menu.
-- **Options:** (a) unpublish → private, (b) delete-and-301 to `/philosophy/`, (c) leave as-is if you find any inbound link.
-- **⚠️ This is destructive — get owner approval before executing.**
-- **Est:** 15 min after decision.
-
-#### [6] Search Console + Analytics sanity check
-- **Why:** After a big IA change, new URLs need to be picked up by Google. Old URLs need to redirect (see [4]).
-- **How:** Submit new sitemap, verify no unexpected 404s, check crawl coverage after 3-7 days.
-- **Est:** 15 min setup, then monitoring for a week.
-
-### 🟢 Priority 3 — enhancement, no fixed deadline
-
-#### [7] HULL VISION landing internal signage navigation
-- **What:** Add internal links from `/digital-signage/` down to DokoDemo signage and TopBoard signage sub-pages.
-- **Why deferred:** The previous owner marked this "나중에" (later). Structural change, not a bug fix.
-- **Est:** 2–3 hours (page structure + content coordination with Yoshizawa-san).
-
-#### [8] Reform page real content
-- **What:** `/reform-business/` (post 6834) has scaffolding but the PDF-based real content layout hasn't been finalized.
-- **Who:** Yoshizawa-san can edit copy/images from wp-admin. Structural layout may need dev help.
-- **Est:** Variable, depends on final PDF spec.
-
-#### [9] Image optimization + SEO plugins
-- **Recommended:** Smush (image auto-optimization), Rank Math or Yoast (SEO metadata).
-- **Why not now:** Not blocking launch. Add after cutover.
-- **Est:** 30 min each.
-
-#### [10] Unused-theme cleanup in Local
-- **What:** `wp-content/themes/` ships with 15+ unused themes (`affinger5×3`, `cocoon×2`, several `twentytwenty*`).
-- **Warning:** Per delete-scope rule, never touch `Local Sites/` files without explicit confirmation. If disk becomes tight, get user approval first.
+- **Local dev environment:** [Local by Flywheel](https://localwp.com/) running a site named `hull-homepage-renewal.local` at `~/Local Sites/hull-homepage-renewal/`
+- **Base:** The 2026-07-31 export of live `hull-inc.jp`, imported as the starting point. All renewal work happened on top of that mirror.
+- **Theme:** Lightning (parent, `15.20.2`) + `lightning-child` (child, our code)
+- **Where site-wide CSS lives:** In **Additional CSS (post 2641)** in the WP database, scoped per page via `body.page-id-<N>`. Not on disk. Edited through wp-admin.
+- **Where template code lives:** In the child theme at `wp-content/themes/lightning-child/` — column CPT templates, works CPT templates, taxonomy templates, `functions.php`, `style.css`.
+- **How changes were verified:** `wp-cli` via `wp.sh` (bash wrapper around Local's PHP + WP-CLI) to query the live local DB, plus browser inspection of the local site.
+- **How the handover was packaged:** The whole site was exported as one `.wpress` via **All-in-One WP Migration** (~1.5 GB), then `split` into 90 MB chunks so GitHub would accept them (100 MB per-file limit), and committed in 3 pieces (docs, first 8 parts, last 8 parts) because a single 1.4 GB push times out.
 
 ---
 
-## Deployment to production
+## Clone → running site (~10 minutes)
 
-Detailed procedure is [`docs/deployment.md`](docs/deployment.md). Load-bearing summary:
+### 1. Clone this repo
+```bash
+git clone https://github.com/sehyun2727/HullHomePage.git hull-homepage-handover
+cd hull-homepage-handover
+```
 
-- **Model:** Whole-site replacement. The local site is exported as one `.wpress` and imported over live. No diff-based sync, no file-by-file transfer.
-- **Access constraint:** `hull-inc.jp` is **wp-admin only** — no SSH, no FTP, no direct DB. The `All-in-One WP Migration` plugin's Import path is the only practical channel for a change this large.
-- **Bottleneck:** The developer with wp-admin credentials is the sole person who can push. Plan accordingly.
-- **Rollback:** Keep the pre-cutover live backup ([Priority 1 item 1]) accessible for 30+ days.
+### 2. Reassemble the `.wpress` from the split parts
 
----
+**macOS / Linux / Git Bash / WSL:**
+```bash
+cd site-backup
+cat parts/hull-site.wpress.part.* > hull-site.wpress
+sha256sum -c wpress-original.sha256   # must print "OK"
+```
 
-## Working principles
+**Windows PowerShell / cmd:** see the full procedure in [`site-backup/README.md`](site-backup/README.md).
 
-Full list in [CLAUDE.md](CLAUDE.md) §6-§7. The ones that will bite you if ignored:
+If SHA verification fails on any part, re-run `git pull`. If a single reassembly attempt keeps failing, the USB handover `.zip` (if delivered) contains the un-split `hull-site.wpress` as insurance.
 
-1. **Method approval before deviating.** If the instructed method is blocked, report first — do not switch on your own, especially not to something flagged as risky.
-2. **"Investigation only" means don't execute.** Content merges and structural edits are separate steps from research.
-3. **Ground truth is the live DB, not backups.** Any backup file in this repo is a moment-in-time snapshot. For "what does the site actually look like right now?", query via WP-CLI.
-4. **Verify environment-specific configs.** `wpcli-php.ini` / port numbers / DB names are per-site; do not copy across sites without checking.
-5. **Destructive actions require prior report.** Deletes, mass updates, DB schema changes.
-6. **Never delete pages.** Set to `private` instead. Recoverability is the reason.
-7. **Never delete files under `~/Local Sites/`.** That's the WordPress install itself. Other cleanup is fine on request.
+### 3. Install Local by Flywheel and create a new WP site
+- Download: https://localwp.com/ (free)
+- Site name: `hull-homepage-renewal` (matches paths used throughout the docs)
+- Environment: Preferred (PHP 8.x, MySQL 8.x)
 
----
+### 4. Install the All-in-One WP Migration plugin on that site
+Open the site in Local → click "WP Admin" → Plugins → Add New → search "All-in-One WP Migration" → Install → Activate.
 
-## Where to look next
+### 5. Import the reassembled `.wpress`
+WP Admin → **All-in-One WP Migration → Import → File** → select `hull-site.wpress`. Takes 5–15 min depending on machine (file is ~1.5 GB).
 
-| Question | File |
-|---|---|
-| "What is this project? What's the goal? What's the full history?" | [CLAUDE.md](CLAUDE.md) |
-| "How do I set this up locally?" | [Quick start](#quick-start) → [docs/setup.md](docs/setup.md) → [site-backup/README.md](site-backup/README.md) |
-| "How does the site get deployed to `hull-inc.jp`?" | [docs/deployment.md](docs/deployment.md) |
-| "What are the pages? What are the post IDs?" | [docs/architecture.md](docs/architecture.md) |
-| "Why is this like this?" (any specific decision) | [docs/decisions-log.md](docs/decisions-log.md) |
-| "How do I name a new file?" | [docs/file-naming-rules.md](docs/file-naming-rules.md) |
-| "Where are the source photos?" | [assets/README.md](assets/README.md) |
-| "What was the original plan (v3)?" | [spec/README.md](spec/README.md) → the two docx files |
-| "Where is the child theme?" | [theme-source/README.md](theme-source/README.md) + `~/Local Sites/.../lightning-child/` |
+### 6. Log in with the credentials from the previous owner
+Credentials are delivered separately, not in this repo. If missing, contact the previous owner.
 
----
+### 7. Re-save permalinks
+Settings → Permalinks → **Save Changes** (no changes needed — this regenerates rewrite rules). **Without this step `/column/*` and `/works/*` return 404.**
 
-## Access and credentials
+### 8. Verify each route renders
+`/`, `/space/`, `/vision/` (or `/digital-signage/`), `/sign/`, `/reform-business/`, `/philosophy/`, `/company/`, `/column/`, `/works/`, `/archives/category/news/`
 
-**None of the following live in this repo.** All are delivered through a separate secure channel by the previous owner:
-
-- WordPress admin username & password (both `hull-inc.jp` live and local test accounts)
-- Any hosting-panel access if it exists
-- GitHub personal access token (if the outgoing developer's credential is being retired)
-- Domain registrar login (usually stays with the internal team, but confirm)
-- Yoshizawa-san's contact for structural questions
-
-If a credential you need is missing from the handover packet, contact the previous owner first, then the internal team (Yoshizawa-san).
+Hard-refresh (Ctrl+Shift+R) if styles look off — Lightning caches CSS aggressively.
 
 ---
 
-## Housekeeping — keeping this repo honest
+## Where you'll actually be working
 
-- **After editing the child theme** (`~/Local Sites/hull-homepage-renewal/.../lightning-child/`): copy the changed file back into `theme-source/lightning-child/` in this repo and commit. Otherwise git history and the deployed theme drift.
-- **After every `.wpress` re-export:** replace `site-backup/parts/*`, regenerate `SHA256SUMS`, update `wpress-original.sha256`, bump the "Backup metadata" table in `site-backup/README.md`.
-- **Push size limits:** the 16 × 90 MB parts pushed cleanly when the push was split into 3 commits (docs + parts 000-007 + parts 008-015). A monolithic 1.4 GB push times out (HTTP 408). Keep the 3-commit pattern.
-- **Global page CSS is not on disk** — it lives in Additional CSS (post 2641), edited via wp-admin. Section markers (`/* ===== [TOP] START/END ===== */`, `[SPACE]`, `[VISION]`, etc.) must be preserved; imports rely on them. See [`docs/architecture.md`](docs/architecture.md).
+Once imported, the site lives here on your machine:
+
+```
+~/Local Sites/hull-homepage-renewal/app/public/
+├── wp-content/
+│   ├── themes/
+│   │   ├── lightning/              parent theme (do not edit)
+│   │   └── lightning-child/        ← child theme — edit these files
+│   ├── plugins/
+│   └── uploads/                    media library
+├── wp-config.php
+└── ...
+```
+
+The **child theme** at `wp-content/themes/lightning-child/` is where template and function code lives. When you change a file there:
+
+1. Edit and verify on the local site
+2. **Copy the changed file back into `theme-source/lightning-child/` in this repo**
+3. Commit — that keeps this repo's history honest
+
+**Site-wide page CSS is NOT in the child theme.** It lives in the WP database as Additional CSS (post 2641) and is edited via **wp-admin → Appearance → Customize → Additional CSS**. Section markers like `/* ===== [TOP] START/END ===== */`, `[SPACE]`, `[VISION]` divide it into per-page blocks — do not delete these markers.
+
+The Local site's WP-CLI wrapper is at `~/Local Sites/hull-homepage-renewal/wp.sh`; invoke as `bash wp.sh <wp-cli command>`.
+
+---
+
+## When you re-export the site backup
+
+Once the local site drifts from what's in this repo (you edit content, upload images, tweak CSS), refresh the site backup:
+
+1. **Export** — WP Admin → All-in-One WP Migration → Export → File. Saves a new `.wpress` under `wp-content/ai1wm-backups/`.
+2. **Copy the new `.wpress`** into this repo as `hull-site.wpress` (root of the handover folder, ignored by `.gitignore`).
+3. **Delete the old parts** in `site-backup/parts/`, then re-split:
+   ```bash
+   split -b 90M -d --suffix-length=3 hull-site.wpress site-backup/parts/hull-site.wpress.part.
+   ```
+4. **Regenerate checksums:**
+   ```bash
+   cd site-backup/parts && sha256sum hull-site.wpress.part.* > SHA256SUMS
+   cd .. && sha256sum ../hull-site.wpress > wpress-original.sha256
+   ```
+5. **Update `site-backup/README.md`** — bump the "Backup metadata" table (SHA, export date, source filename).
+6. **Commit in 3 pieces** — docs + parts 000-007 + parts 008-015. Single monolithic push (>1 GB) times out with HTTP 408.
+
+---
+
+## Deploying to production (`hull-inc.jp`)
+
+Full procedure in [`docs/deployment.md`](docs/deployment.md). One-line summary:
+
+Export the local site as a `.wpress`, log into `hull-inc.jp/wp-admin`, use All-in-One WP Migration to import it over live, then re-save permalinks and verify. Live has no SSH/FTP — the plugin path is the only channel.
+
+**Before cutting over, back up live first** (`docs/deployment.md` step 1). Rollback = re-importing that backup.
+
+---
+
+## Credentials
+
+Not in this repo. Delivered separately by the previous owner. Includes: WP admin (live + local), any hosting-panel access, GitHub token if the outgoing developer's is being retired, Yoshizawa-san's contact for structural questions.
